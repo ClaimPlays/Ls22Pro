@@ -12,7 +12,7 @@ public class FieldManager {
 
     public FieldManager() {
         fields = new ArrayList<>();
-        initializeTranslationMap();
+        initializeTranslationMap(); // Übersetzungstabelle initialisieren
     }
 
     // Übersetzung der Fruchtnamen ins Deutsche
@@ -56,7 +56,7 @@ public class FieldManager {
             loadPurchasedFields(filePath);
 
         } catch (Exception e) {
-            System.out.println("Error loading fields: " + e.getMessage());
+            System.out.println("Fehler beim Laden der Felder: " + e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class FieldManager {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
 
-            Element root = document.createElement("purchasedFields");
+            Element root = document.createElement("gekaufteFelder");
             document.appendChild(root);
 
             for (Field field : fields) {
@@ -89,7 +89,7 @@ public class FieldManager {
             transformer.transform(source, result);
 
         } catch (Exception e) {
-            System.out.println("Error saving purchased fields: " + e.getMessage());
+            System.out.println("Fehler beim Speichern der gekauften Felder: " + e.getMessage());
         }
     }
 
@@ -128,23 +128,8 @@ public class FieldManager {
             }
 
         } catch (Exception e) {
-            System.out.println("Error loading purchased fields: " + e.getMessage());
+            System.out.println("Fehler beim Laden der gekauften Felder: " + e.getMessage());
         }
-    }
-
-    // Realistische Fruchtfolgen basierend auf der aktuellen Frucht
-    public List<String> getNextFruitOptions(String currentFruit) {
-        Map<String, List<String>> fruitRotation = new HashMap<>();
-        fruitRotation.put("Weizen", Arrays.asList("Raps", "Gerste", "Kartoffeln"));
-        fruitRotation.put("Gerste", Arrays.asList("Weizen", "Mais", "Zuckerrüben"));
-        fruitRotation.put("Raps", Arrays.asList("Weizen", "Kartoffeln", "Sonnenblumen"));
-        fruitRotation.put("Mais", Arrays.asList("Sojabohnen", "Sonnenblumen", "Zuckerrüben"));
-        fruitRotation.put("Zuckerrüben", Arrays.asList("Raps", "Kartoffeln", "Weizen"));
-        fruitRotation.put("Kartoffeln", Arrays.asList("Weizen", "Gerste", "Mais"));
-        fruitRotation.put("Sonnenblumen", Arrays.asList("Mais", "Sojabohnen", "Zuckerrüben"));
-        fruitRotation.put("Sojabohnen", Arrays.asList("Weizen", "Gerste", "Raps"));
-
-        return fruitRotation.getOrDefault(currentFruit, Arrays.asList("Weizen", "Gerste", "Raps"));
     }
 
     public List<Field> getFields() {
