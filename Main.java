@@ -27,7 +27,7 @@ public class Main extends Application {
 
         // Spalten erstellen
         TableColumn<Field, Number> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId())); // Verwende SimpleIntegerProperty
+        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()));
 
         TableColumn<Field, String> fruitColumn = new TableColumn<>("Frucht");
         fruitColumn.setCellValueFactory(cellData -> {
@@ -55,7 +55,7 @@ public class Main extends Application {
                         return;
                     }
 
-                    Field field = (Field) getTableRow().getItem(); // Explizite Typkonvertierung zu Field
+                    Field field = (Field) getTableRow().getItem();
                     List<String> nextFruitOptions = fieldManager.getNextFruitOptions(field.getPlannedFruit());
                     comboBox.setItems(FXCollections.observableArrayList(nextFruitOptions));
                     comboBox.setValue(field.getNextFruit());
