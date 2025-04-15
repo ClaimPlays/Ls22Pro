@@ -1,0 +1,47 @@
+/* Allgemeine Einstellungen */
+.root {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-background-color: #f4f4f4;
+}
+
+/* Tab-Styling */
+.tab-pane .tab {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #005a9e;
+}
+
+/* Button-Styling */
+.button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #005a9e;
+}
+
+/* Tooltip-Styling */
+.tooltip {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+/* Table-View-Styling */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #dcdcdc;
+}
+
+.table-column-header {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+}

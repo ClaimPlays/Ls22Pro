@@ -66,6 +66,19 @@ public class Main extends Application {
             }
         });
 
+        CheckBox filterPurchasedCheckbox = new CheckBox("Nur gekaufte Felder anzeigen");
+        filterPurchasedCheckbox.setTooltip(new Tooltip("Filtern Sie die Tabelle, um nur gekaufte Felder anzuzeigen."));
+        filterPurchasedCheckbox.setOnAction(e -> {
+            if (filterPurchasedCheckbox.isSelected()) {
+                // Zeige nur gekaufte Felder
+                List<Field> purchasedFields = fieldManager.filterByPurchasedStatus(true);
+                tableView.setItems(FXCollections.observableArrayList(purchasedFields));
+            } else {
+                // Zeige alle Felder
+                tableView.setItems(FXCollections.observableArrayList(fieldManager.getFields()));
+            }
+        });
+
         // Monatsauswahl ComboBox mit Tooltip
         ComboBox<String> monthComboBox = new ComboBox<>();
         monthComboBox.setTooltip(new Tooltip("Wähle den aktuellen Monat aus, um die Feldstatus zu aktualisieren."));
@@ -80,14 +93,29 @@ public class Main extends Application {
             updateFieldStatusBasedOnMonth(selectedMonth);
         });
 
-        HBox buttonBox = new HBox(10, loadButton, saveButton, monthComboBox);
+        CheckBox darkModeToggle = new CheckBox("Dunkelmodus aktivieren");
+        darkModeToggle.setTooltip(new Tooltip("Aktivieren Sie den Dunkelmodus für die Anwendung."));
+        darkModeToggle.setOnAction(e -> {
+            if (darkModeToggle.isSelected()) {
+                // Dunkelmodus aktivieren
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("dark-mode.css").toExternalForm());
+            } else {
+                // Hellmodus aktivieren
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            }
+        });
+
+        HBox buttonBox = new HBox(10, loadButton, saveButton, monthComboBox, filterPurchasedCheckbox);
 
         // Tooltip für die Buttons
         Tooltip buttonBoxTooltip = new Tooltip("Verwende die Buttons, um Daten zu laden, zu speichern oder den Monat auszuwählen.");
         Tooltip.install(buttonBox, buttonBoxTooltip);
 
-        VBox fieldManagementLayout = new VBox(10, tableView, buttonBox);
-        fieldManagementTab.setContent(fieldManagementLayout);
+        VBox controlsLayout = new VBox(10, loadButton, saveButton, monthComboBox, filterPurchasedCheckbox, darkModeToggle);
+        controlsLayout.setSpacing(10);
+        controlsLayout.setStyle("-fx-padding: 15; -fx-alignment: center-left;");
 
         // Tab 2: Kalender
         Tab calendarTab = new Tab("Kalender");
@@ -110,6 +138,7 @@ public class Main extends Application {
         root.setCenter(tabPane);
 
         Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
 
