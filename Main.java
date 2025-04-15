@@ -93,29 +93,14 @@ public class Main extends Application {
             updateFieldStatusBasedOnMonth(selectedMonth);
         });
 
-        CheckBox darkModeToggle = new CheckBox("Dunkelmodus aktivieren");
-        darkModeToggle.setTooltip(new Tooltip("Aktivieren Sie den Dunkelmodus für die Anwendung."));
-        darkModeToggle.setOnAction(e -> {
-            if (darkModeToggle.isSelected()) {
-                // Dunkelmodus aktivieren
-                scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("dark-mode.css").toExternalForm());
-            } else {
-                // Hellmodus aktivieren
-                scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-            }
-        });
-
         HBox buttonBox = new HBox(10, loadButton, saveButton, monthComboBox, filterPurchasedCheckbox);
 
         // Tooltip für die Buttons
         Tooltip buttonBoxTooltip = new Tooltip("Verwende die Buttons, um Daten zu laden, zu speichern oder den Monat auszuwählen.");
         Tooltip.install(buttonBox, buttonBoxTooltip);
 
-        VBox controlsLayout = new VBox(10, loadButton, saveButton, monthComboBox, filterPurchasedCheckbox, darkModeToggle);
-        controlsLayout.setSpacing(10);
-        controlsLayout.setStyle("-fx-padding: 15; -fx-alignment: center-left;");
+        VBox fieldManagementLayout = new VBox(10, tableView, buttonBox);
+        fieldManagementTab.setContent(fieldManagementLayout);
 
         // Tab 2: Kalender
         Tab calendarTab = new Tab("Kalender");
