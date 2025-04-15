@@ -32,6 +32,42 @@ public class FieldManager {
         return translationMap.getOrDefault(fruitName, fruitName); // Fallback auf Originalname
     }
 
+    // Neue Methode: Gibt eine Liste von möglichen nächsten Früchten basierend auf der geplanten Frucht zurück
+    public List<String> getNextFruitOptions(String plannedFruit) {
+        List<String> options = new ArrayList<>();
+        switch (plannedFruit) {
+            case "Wheat":
+            case "Weizen":
+                options.add("Barley");
+                options.add("Canola");
+                break;
+            case "Barley":
+            case "Gerste":
+                options.add("Wheat");
+                options.add("Corn");
+                break;
+            case "Canola":
+            case "Raps":
+                options.add("Sunflower");
+                options.add("Soybean");
+                break;
+            case "Corn":
+            case "Mais":
+                options.add("Potato");
+                options.add("SugarBeet");
+                break;
+            case "Soybean":
+            case "Sojabohnen":
+                options.add("Wheat");
+                options.add("Barley");
+                break;
+            default:
+                options.add("Unknown");
+                break;
+        }
+        return options;
+    }
+
     // Felder aus einer XML-Datei laden
     public void loadFields(String filePath) {
         try {
