@@ -18,51 +18,81 @@ public class FieldManager {
     // Übersetzung der Fruchtnamen ins Deutsche
     private void initializeTranslationMap() {
         translationMap = new HashMap<>();
-        translationMap.put("Wheat", "Weizen");
-        translationMap.put("Barley", "Gerste");
-        translationMap.put("Canola", "Raps");
-        translationMap.put("Corn", "Mais");
-        translationMap.put("SugarBeet", "Zuckerrüben");
-        translationMap.put("Potato", "Kartoffeln");
-        translationMap.put("Sunflower", "Sonnenblumen");
-        translationMap.put("Soybean", "Sojabohnen");
+        translationMap.put("WHEAT", "Weizen");
+        translationMap.put("BARLEY", "Gerste");
+        translationMap.put("CANOLA", "Raps");
+        translationMap.put("CORN", "Mais");
+        translationMap.put("SUGARBEEET", "Zuckerrüben");
+        translationMap.put("POTATO", "Kartoffeln");
+        translationMap.put("SUNFLOWER", "Sonnenblumen");
+        translationMap.put("SOYBEAN", "Sojabohnen");
+        translationMap.put("OAT", "Hafer");
+        translationMap.put("SORGHUM", "Sorghum");
+        translationMap.put("GRASS", "Gras");
+        translationMap.put("MAIZE", "Mais");
+        translationMap.put("COTTON", "Baumwolle");
+        translationMap.put("UNKNOWN", "Unbekannt");
     }
 
     public String translateFruit(String fruitName) {
-        return translationMap.getOrDefault(fruitName, fruitName); // Fallback auf Originalname
+        return translationMap.getOrDefault(fruitName.toUpperCase(), "Unbekannt"); // Fallback auf "Unbekannt"
     }
 
     // Neue Methode: Gibt eine Liste von möglichen nächsten Früchten basierend auf der geplanten Frucht zurück
     public List<String> getNextFruitOptions(String plannedFruit) {
         List<String> options = new ArrayList<>();
-        switch (plannedFruit) {
-            case "Wheat":
-            case "Weizen":
-                options.add("Barley");
-                options.add("Canola");
+        switch (plannedFruit.toUpperCase()) {
+            case "WHEAT":
+                options.add("Raps");
+                options.add("Gerste");
                 break;
-            case "Barley":
-            case "Gerste":
-                options.add("Wheat");
-                options.add("Corn");
+            case "BARLEY":
+                options.add("Weizen");
+                options.add("Hafer");
                 break;
-            case "Canola":
-            case "Raps":
-                options.add("Sunflower");
-                options.add("Soybean");
+            case "CANOLA":
+                options.add("Weizen");
+                options.add("Sonnenblumen");
                 break;
-            case "Corn":
-            case "Mais":
-                options.add("Potato");
-                options.add("SugarBeet");
+            case "CORN":
+            case "MAIZE":
+                options.add("Sojabohnen");
+                options.add("Kartoffeln");
                 break;
-            case "Soybean":
-            case "Sojabohnen":
-                options.add("Wheat");
-                options.add("Barley");
+            case "SOYBEAN":
+                options.add("Mais");
+                options.add("Sorghum");
+                break;
+            case "SUNFLOWER":
+                options.add("Mais");
+                options.add("Sojabohnen");
+                break;
+            case "POTATO":
+                options.add("Weizen");
+                options.add("Zuckerrüben");
+                break;
+            case "SUGARBEEET":
+                options.add("Kartoffeln");
+                options.add("Gerste");
+                break;
+            case "OAT":
+                options.add("Gerste");
+                options.add("Gras");
+                break;
+            case "SORGHUM":
+                options.add("Mais");
+                options.add("Sojabohnen");
+                break;
+            case "GRASS":
+                options.add("Weizen");
+                options.add("Gerste");
+                break;
+            case "COTTON":
+                options.add("Sorghum");
+                options.add("Sojabohnen");
                 break;
             default:
-                options.add("Unknown");
+                options.add("UNKNOWN");
                 break;
         }
         return options;
