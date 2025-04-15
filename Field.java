@@ -6,12 +6,14 @@ public class Field {
     private final String plannedFruit; // Aktuelle Frucht
     private final SimpleBooleanProperty purchased; // Ob das Feld gekauft wurde
     private final SimpleStringProperty nextFruit; // Folge Frucht
+    private final SimpleStringProperty status; // Status des Feldes
 
     public Field(int id, String plannedFruit, boolean purchased, String nextFruit) {
         this.id = id;
         this.plannedFruit = plannedFruit;
         this.purchased = new SimpleBooleanProperty(purchased);
         this.nextFruit = new SimpleStringProperty(nextFruit);
+        this.status = new SimpleStringProperty("Offen"); // Standardstatus
     }
 
     public int getId() {
@@ -44,5 +46,17 @@ public class Field {
 
     public SimpleStringProperty nextFruitProperty() {
         return nextFruit;
+    }
+
+    public String getStatus() {
+        return status.get();
+    }
+
+    public void setStatus(String status) {
+        this.status.set(status);
+    }
+
+    public SimpleStringProperty statusProperty() {
+        return status;
     }
 }
