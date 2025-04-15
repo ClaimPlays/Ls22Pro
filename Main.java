@@ -5,14 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,7 +39,12 @@ public class Main extends Application {
 
         tableView = createFieldTableView();
 
+        // Tooltip für die Tabelle
+        Tooltip tableTooltip = new Tooltip("Zeigt alle Felder mit Frucht, Status und weiteren Informationen an.");
+        Tooltip.install(tableView, tableTooltip);
+
         Button loadButton = new Button("Datei laden");
+        loadButton.setTooltip(new Tooltip("Wähle eine fields.xml-Datei aus, um Felder zu laden."));
         loadButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("fields.xml auswählen");
@@ -53,14 +59,16 @@ public class Main extends Application {
         });
 
         Button saveButton = new Button("Speichern");
+        saveButton.setTooltip(new Tooltip("Speichert die gekauften Felder in der geladenen fields.xml-Datei."));
         saveButton.setOnAction(e -> {
             if (fieldsFilePath != null) {
                 fieldManager.savePurchasedFields(fieldsFilePath);
             }
         });
 
-        // Monatsauswahl ComboBox
+        // Monatsauswahl ComboBox mit Tooltip
         ComboBox<String> monthComboBox = new ComboBox<>();
+        monthComboBox.setTooltip(new Tooltip("Wähle den aktuellen Monat aus, um die Feldstatus zu aktualisieren."));
         monthComboBox.setItems(FXCollections.observableArrayList(
                 "Januar", "Februar", "März", "April", "Mai", "Juni",
                 "Juli", "August", "September", "Oktober", "November", "Dezember"
@@ -73,6 +81,11 @@ public class Main extends Application {
         });
 
         HBox buttonBox = new HBox(10, loadButton, saveButton, monthComboBox);
+
+        // Tooltip für die Buttons
+        Tooltip buttonBoxTooltip = new Tooltip("Verwende die Buttons, um Daten zu laden, zu speichern oder den Monat auszuwählen.");
+        Tooltip.install(buttonBox, buttonBoxTooltip);
+
         VBox fieldManagementLayout = new VBox(10, tableView, buttonBox);
         fieldManagementTab.setContent(fieldManagementLayout);
 
@@ -82,6 +95,11 @@ public class Main extends Application {
 
         GrowthCalendar growthCalendarView = new GrowthCalendar();
         VBox calendarView = growthCalendarView.getCalendarView();
+
+        // Tooltip für den Kalender-Tab
+        Tooltip calendarTooltip = new Tooltip("Zeigt den Wachstums- und Erntekalender für alle Feldfrüchte an.");
+        Tooltip.install(calendarView, calendarTooltip);
+
         calendarTab.setContent(calendarView);
 
         // Tabs hinzufügen
@@ -99,7 +117,11 @@ public class Main extends Application {
         initializeGrowthCalendar();
         loadConfig();
 
-        // Aktualisiere Tabelle basierend auf geladenem Monat
+        // Felder und Monat laden (falls vorhanden)
+        if (fieldsFilePath != null && !fieldsFilePath.isEmpty()) {
+            fieldManager.loadFields(fieldsFilePath);
+            tableView.setItems(FXCollections.observableArrayList(fieldManager.getFields()));
+        }
         if (selectedMonth != null && !selectedMonth.isEmpty()) {
             monthComboBox.setValue(selectedMonth);
             updateFieldStatusBasedOnMonth(selectedMonth);
@@ -110,7 +132,7 @@ public class Main extends Application {
         TableView<Field> tableView = new TableView<>();
         tableView.setEditable(true);
 
-        TableColumn<Field, Number> idColumn = new TableColumn<>("ID");
+        TableColumn<Field, Number> idColumn = new TableColumn<>("Feld Nr.");
         idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()));
 
         TableColumn<Field, String> fruitColumn = new TableColumn<>("Frucht");
@@ -149,8 +171,50 @@ public class Main extends Application {
             };
         });
 
+// Setze die Breite der Spalte "Folge Frucht"
+        nextFruitColumn.setPrefWidth(120); // Passe die Breite hier nach Bedarf an
+
         TableColumn<Field, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
+
+        // Zellen-Renderer für farbliche Darstellung des Status
+        statusColumn.setCellFactory(new Callback<TableColumn<Field, String>, TableCell<Field, String>>() {
+            @Override
+            public TableCell<Field, String> call(TableColumn<Field, String> param) {
+                return new TableCell<Field, String>() {
+                    @Override
+                    protected void updateItem(String status, boolean empty) {
+                        super.updateItem(status, empty);
+
+                        if (empty || status == null) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            setText(status);
+
+                            // Hintergrundfarbe basierend auf dem Status setzen
+                            switch (status) {
+                                case "Saatzeit":
+                                    setStyle("-fx-background-color: lightgreen; -fx-text-fill: black;");
+                                    break;
+                                case "Wachstum":
+                                    setStyle("-fx-background-color: lightblue; -fx-text-fill: black;");
+                                    break;
+                                case "Erntezeit":
+                                    setStyle("-fx-background-color: yellow; -fx-text-fill: black;");
+                                    break;
+                                case "Geerntet":
+                                    setStyle("-fx-background-color: brown; -fx-text-fill: white;");
+                                    break;
+                                default:
+                                    setStyle("");
+                                    break;
+                            }
+                        }
+                    }
+                };
+            }
+        });
 
         tableView.getColumns().addAll(idColumn, fruitColumn, purchasedColumn, nextFruitColumn, statusColumn);
 
@@ -158,25 +222,8 @@ public class Main extends Application {
     }
 
     private void initializeGrowthCalendar() {
-        growthCalendar = new HashMap<>();
-
-        // Beispiel: Wachstumsdaten für Kartoffeln
-        Map<String, String> potatoGrowth = new HashMap<>();
-        potatoGrowth.put("Januar", "Wachstum");
-        potatoGrowth.put("Februar", "Wachstum");
-        potatoGrowth.put("März", "Saatzeit");
-        potatoGrowth.put("April", "Saatzeit");
-        potatoGrowth.put("Mai", "Wachstum");
-        potatoGrowth.put("Juni", "Erntezeit");
-        potatoGrowth.put("Juli", "Erntezeit");
-        potatoGrowth.put("August", "Geerntet");
-        potatoGrowth.put("September", "Geerntet");
-        potatoGrowth.put("Oktober", "Geerntet");
-        potatoGrowth.put("November", "Saatzeit");
-        potatoGrowth.put("Dezember", "Wachstum");
-        growthCalendar.put("Kartoffeln", potatoGrowth);
-
-        // Weitere Früchte hinzufügen...
+        // Wachstums-Kalender aus GrowthCalendarInitializer abrufen
+        growthCalendar = GrowthCalendarInitializer.initializeGrowthCalendar();
     }
 
     private void updateFieldStatusBasedOnMonth(String selectedMonth) {
@@ -185,10 +232,18 @@ public class Main extends Application {
         }
 
         for (Field field : tableView.getItems()) {
+            // Fruchtname übersetzen
             String fruit = fieldManager.translateFruit(field.getPlannedFruit());
-            Map<String, String> fruitGrowth = growthCalendar.getOrDefault(fruit, new HashMap<>());
-            String status = fruitGrowth.getOrDefault(selectedMonth, "Offen");
-            field.setStatus(status);
+
+            // Wachstumsdaten abrufen
+            Map<String, String> fruitGrowth = growthCalendar.getOrDefault(fruit, null);
+            if (fruitGrowth != null) {
+                // Status für den Monat abrufen
+                String status = fruitGrowth.getOrDefault(selectedMonth, "Offen");
+                field.setStatus(status);
+            } else {
+                field.setStatus("Offen");
+            }
         }
 
         // Tabelle aktualisieren
@@ -200,20 +255,28 @@ public class Main extends Application {
             Properties properties = new Properties();
             properties.setProperty("fieldsFilePath", fieldsFilePath != null ? fieldsFilePath : "");
             properties.setProperty("selectedMonth", selectedMonth != null ? selectedMonth : "");
-            properties.store(output, null);
+            properties.store(output, "Konfiguration für LS22 Feldverwaltung");
+            System.out.println("Konfiguration gespeichert: " + CONFIG_FILE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void loadConfig() {
+        File configFile = new File(CONFIG_FILE);
+        if (!configFile.exists()) {
+            System.out.println("Keine gespeicherte Konfiguration gefunden.");
+            return;
+        }
+
         try (FileInputStream input = new FileInputStream(CONFIG_FILE)) {
             Properties properties = new Properties();
             properties.load(input);
             fieldsFilePath = properties.getProperty("fieldsFilePath", "");
             selectedMonth = properties.getProperty("selectedMonth", "");
+            System.out.println("Konfiguration geladen: fieldsFilePath=" + fieldsFilePath + ", selectedMonth=" + selectedMonth);
         } catch (IOException e) {
-            System.out.println("Keine gespeicherte Konfiguration gefunden.");
+            e.printStackTrace();
         }
     }
 
