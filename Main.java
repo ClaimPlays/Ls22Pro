@@ -6,13 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.scene.control.ToggleButton; // Importiert für den Dunkelmodus-Button
+import javafx.scene.control.ToggleButton;
 
 import java.io.*;
 import java.util.List;
@@ -45,6 +43,7 @@ public class Main extends Application {
         Tooltip tableTooltip = new Tooltip("Zeigt alle Felder mit Frucht, Status und weiteren Informationen an.");
         Tooltip.install(tableView, tableTooltip);
 
+        // Buttons und andere UI-Elemente
         Button loadButton = new Button("Datei laden");
         loadButton.setTooltip(new Tooltip("Wähle eine fields.xml-Datei aus, um Felder zu laden."));
         loadButton.setOnAction(e -> {
@@ -95,13 +94,22 @@ public class Main extends Application {
             updateFieldStatusBasedOnMonth(selectedMonth);
         });
 
-        HBox buttonBox = new HBox(10, loadButton, saveButton, monthComboBox, filterPurchasedCheckbox);
+        // Layout mit GridPane
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
 
-        // Tooltip für die Buttons
-        Tooltip buttonBoxTooltip = new Tooltip("Verwende die Buttons, um Daten zu laden, zu speichern oder den Monat auszuwählen.");
-        Tooltip.install(buttonBox, buttonBoxTooltip);
+        // Buttons und Filter in die obere Zeile des GridPane setzen
+        gridPane.add(loadButton, 0, 0);
+        gridPane.add(saveButton, 1, 0);
+        gridPane.add(monthComboBox, 2, 0);
+        gridPane.add(filterPurchasedCheckbox, 3, 0);
 
-        VBox fieldManagementLayout = new VBox(10, tableView, buttonBox);
+        // Tabelle in die nächste Zeile setzen
+        gridPane.add(tableView, 0, 1, 4, 1); // Tabelle über die gesamte Breite
+
+        // Tab-Inhalt setzen
+        VBox fieldManagementLayout = new VBox(10, gridPane);
         fieldManagementTab.setContent(fieldManagementLayout);
 
         // Tab 2: Kalender
@@ -201,13 +209,11 @@ public class Main extends Application {
             };
         });
 
-// Setze die Breite der Spalte "Folge Frucht"
-        nextFruitColumn.setPrefWidth(120); // Passe die Breite hier nach Bedarf an
+        nextFruitColumn.setPrefWidth(120);
 
         TableColumn<Field, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
 
-        // Zellen-Renderer für farbliche Darstellung des Status
         statusColumn.setCellFactory(new Callback<TableColumn<Field, String>, TableCell<Field, String>>() {
             @Override
             public TableCell<Field, String> call(TableColumn<Field, String> param) {
@@ -222,7 +228,6 @@ public class Main extends Application {
                         } else {
                             setText(status);
 
-                            // Hintergrundfarbe basierend auf dem Status setzen
                             switch (status) {
                                 case "Saatzeit":
                                     setStyle("-fx-background-color: lightgreen; -fx-text-fill: black;");
@@ -252,7 +257,6 @@ public class Main extends Application {
     }
 
     private void initializeGrowthCalendar() {
-        // Wachstums-Kalender aus GrowthCalendarInitializer abrufen
         growthCalendar = GrowthCalendarInitializer.initializeGrowthCalendar();
     }
 
@@ -262,13 +266,10 @@ public class Main extends Application {
         }
 
         for (Field field : tableView.getItems()) {
-            // Fruchtname übersetzen
             String fruit = fieldManager.translateFruit(field.getPlannedFruit());
 
-            // Wachstumsdaten abrufen
             Map<String, String> fruitGrowth = growthCalendar.getOrDefault(fruit, null);
             if (fruitGrowth != null) {
-                // Status für den Monat abrufen
                 String status = fruitGrowth.getOrDefault(selectedMonth, "Offen");
                 field.setStatus(status);
             } else {
@@ -276,7 +277,6 @@ public class Main extends Application {
             }
         }
 
-        // Tabelle aktualisieren
         tableView.refresh();
     }
 
@@ -286,7 +286,6 @@ public class Main extends Application {
             properties.setProperty("fieldsFilePath", fieldsFilePath != null ? fieldsFilePath : "");
             properties.setProperty("selectedMonth", selectedMonth != null ? selectedMonth : "");
             properties.store(output, "Konfiguration für LS22 Feldverwaltung");
-            System.out.println("Konfiguration gespeichert: " + CONFIG_FILE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -295,7 +294,6 @@ public class Main extends Application {
     private void loadConfig() {
         File configFile = new File(CONFIG_FILE);
         if (!configFile.exists()) {
-            System.out.println("Keine gespeicherte Konfiguration gefunden.");
             return;
         }
 
@@ -304,7 +302,6 @@ public class Main extends Application {
             properties.load(input);
             fieldsFilePath = properties.getProperty("fieldsFilePath", "");
             selectedMonth = properties.getProperty("selectedMonth", "");
-            System.out.println("Konfiguration geladen: fieldsFilePath=" + fieldsFilePath + ", selectedMonth=" + selectedMonth);
         } catch (IOException e) {
             e.printStackTrace();
         }
