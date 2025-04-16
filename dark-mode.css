@@ -1,34 +1,80 @@
-/* Allgemeine Einstellungen für Dunkelmodus */
+/* Allgemeine Einstellungen */
 .root {
     -fx-font-family: "Arial";
     -fx-font-size: 14px;
-    -fx-background-color: #2b2b2b;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #121212; /* Sehr dunkler Hintergrund */
+    -fx-text-fill: #e0e0e0; /* Helle Schriftfarbe */
+}
+
+/* Tab-Styling */
+.tab-pane .tab {
+    -fx-background-color: #1e1e1e; /* Dunkler Hintergrund */
+    -fx-text-fill: #e0e0e0; /* Text hell */
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #0078d7; /* Blau markierte Tabs */
+    -fx-text-fill: #ffffff; /* Weißer Text */
 }
 
 /* Button-Styling */
-.button, .toggle-button {
-    -fx-background-color: #444444;
-    -fx-text-fill: #ffffff;
+.button {
+    -fx-background-color: #333333; /* Dunkles Grau */
+    -fx-text-fill: #ffffff; /* Weißer Text */
     -fx-padding: 10px 20px;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
 }
 
-.button:hover, .toggle-button:hover {
-    -fx-background-color: #666666;
+.button:hover {
+    -fx-background-color: #444444; /* Helleres Grau beim Hover */
 }
 
-/* TableView */
+/* Tooltip-Styling */
+.tooltip {
+    -fx-background-color: #212121;
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 12px;
+}
+
+/* Table-View-Styling */
 .table-view {
-    -fx-base: #333333;
-    -fx-control-inner-background: #3c3f41;
-    -fx-text-background-color: #ffffff;
-    -fx-border-color: #555555;
-    -fx-border-width: 1px;
+    -fx-background-color: #1e1e1e; /* Dunkler Tabellenhintergrund */
+    -fx-border-color: #444444; /* Dunkler Rahmen */
 }
 
 .table-column-header {
-    -fx-background-color: #444444;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #333333; /* Dunkler Kopfzeilenhintergrund */
+    -fx-text-fill: #ffffff; /* Weißer Text */
+}
+
+.table-row-cell {
+    -fx-background-color: #1e1e1e; /* Dunklere Zellfarbe */
+    -fx-text-fill: #e0e0e0; /* Helle Schrift */
+}
+
+/* Statusfarben in der Tabelle */
+.table-cell {
+    -fx-background-color: #1e1e1e; /* Standard für Zellen */
+    -fx-text-fill: #e0e0e0;
+}
+
+.table-cell[saatzeit] {
+    -fx-background-color: #2e7d32; /* Dunkleres Grün für Saatzeit */
+    -fx-text-fill: #ffffff; /* Weißer Text */
+}
+
+.table-cell[wachstum] {
+    -fx-background-color: #1565c0; /* Dunkleres Blau für Wachstum */
+    -fx-text-fill: #ffffff; /* Weißer Text */
+}
+
+.table-cell[erntezeit] {
+    -fx-background-color: #f9a825; /* Dunkleres Gelb für Erntezeit */
+    -fx-text-fill: #000000; /* Schwarzer Text */
+}
+
+.table-cell[geerntet] {
+    -fx-background-color: #8e0000; /* Dunkleres Rot für Geerntet */
+    -fx-text-fill: #ffffff; /* Weißer Text */
 }

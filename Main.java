@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.scene.control.ToggleButton; // Importiert für den Dunkelmodus-Button
 
 import java.io.*;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Main extends Application {
     private TableView<Field> tableView;
     private Map<String, Map<String, String>> growthCalendar; // Karte für Frucht und Status basierend auf Monat
     private final String CONFIG_FILE = "config.properties"; // Datei zur Speicherung von Pfad und Monat
+    private boolean isDarkMode = false; // Zustand des Dunkelmodus
 
     @Override
     public void start(Stage primaryStage) {
@@ -118,9 +120,23 @@ public class Main extends Application {
         // Tabs hinzufügen
         tabPane.getTabs().addAll(fieldManagementTab, calendarTab);
 
+        // Dunkelmodus Umschalter
+        ToggleButton darkModeToggle = new ToggleButton("Dunkelmodus");
+        darkModeToggle.setOnAction(e -> {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                primaryStage.getScene().getStylesheets().clear();
+                primaryStage.getScene().getStylesheets().add(getClass().getResource("dark-mode.css").toExternalForm());
+            } else {
+                primaryStage.getScene().getStylesheets().clear();
+                primaryStage.getScene().getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            }
+        });
+
         // Szene erstellen
         BorderPane root = new BorderPane();
         root.setCenter(tabPane);
+        root.setBottom(darkModeToggle);
 
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
