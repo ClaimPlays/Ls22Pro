@@ -12,7 +12,7 @@
 }
 
 .tab-pane .tab:selected {
-    -fx-background-color: #005a9e;
+    -fx-background-color: #009e44;
 }
 
 /* Button-Styling */
@@ -25,7 +25,7 @@
 }
 
 .button:hover {
-    -fx-background-color: #005a9e;
+    -fx-background-color: #009e44;
 }
 
 /* Tooltip-Styling */

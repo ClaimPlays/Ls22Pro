@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -96,7 +97,7 @@ public class Main extends Application {
 
         // Layout mit GridPane
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(10);
+        gridPane.setHgap(30);
         gridPane.setVgap(10);
 
         // Buttons und Filter in die obere Zeile des GridPane setzen
@@ -104,6 +105,9 @@ public class Main extends Application {
         gridPane.add(saveButton, 1, 0);
         gridPane.add(monthComboBox, 2, 0);
         gridPane.add(filterPurchasedCheckbox, 3, 0);
+
+        // ** Abstand nach unten hinzufügen **
+        VBox.setMargin(gridPane, new Insets(10, 0, 20, 0)); // Abstand zwischen Buttons und Tabelle
 
         // Tabelle in die nächste Zeile setzen
         gridPane.add(tableView, 0, 1, 4, 1); // Tabelle über die gesamte Breite
@@ -209,7 +213,8 @@ public class Main extends Application {
             };
         });
 
-        nextFruitColumn.setPrefWidth(120);
+        nextFruitColumn.setPrefWidth(150);
+        fruitColumn.setPrefWidth(100);
 
         TableColumn<Field, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
