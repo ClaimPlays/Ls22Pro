@@ -133,26 +133,15 @@ public class Main extends Application {
         WorkTab workTab = new WorkTab();
         Tab workTabContent = workTab.createWorkTab();
 
-        // Tabs hinzufügen
-        tabPane.getTabs().addAll(fieldManagementTab, workTabContent, calendarTab);
+        SettingsTab settingsTab = new SettingsTab(primaryStage); // Hier wird die primaryStage übergeben
+        Tab settingsTabContent = settingsTab.createSettingsTab();
 
-        // Dunkelmodus Umschalter
-        ToggleButton darkModeToggle = new ToggleButton("Dunkelmodus");
-        darkModeToggle.setOnAction(e -> {
-            isDarkMode = !isDarkMode;
-            if (isDarkMode) {
-                primaryStage.getScene().getStylesheets().clear();
-                primaryStage.getScene().getStylesheets().add(getClass().getResource("dark-mode.css").toExternalForm());
-            } else {
-                primaryStage.getScene().getStylesheets().clear();
-                primaryStage.getScene().getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-            }
-        });
+        // Tabs hinzufügen
+        tabPane.getTabs().addAll(fieldManagementTab, workTabContent, calendarTab, settingsTabContent);
 
         // Szene erstellen
         BorderPane root = new BorderPane();
         root.setCenter(tabPane);
-        root.setBottom(darkModeToggle);
 
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
