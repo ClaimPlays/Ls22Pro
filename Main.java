@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tab;
 
 import java.io.*;
 import java.util.List;
@@ -129,8 +130,11 @@ public class Main extends Application {
 
         calendarTab.setContent(calendarView);
 
+        WorkTab workTab = new WorkTab();
+        Tab workTabContent = workTab.createWorkTab();
+
         // Tabs hinzufügen
-        tabPane.getTabs().addAll(fieldManagementTab, calendarTab);
+        tabPane.getTabs().addAll(fieldManagementTab, workTabContent, calendarTab);
 
         // Dunkelmodus Umschalter
         ToggleButton darkModeToggle = new ToggleButton("Dunkelmodus");
