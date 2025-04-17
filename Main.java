@@ -130,7 +130,7 @@ public class Main extends Application {
 
         calendarTab.setContent(calendarView);
 
-        WorkTab workTab = new WorkTab();
+        WorkTab workTab = new WorkTab(fieldManager);
         Tab workTabContent = workTab.createWorkTab();
 
         SettingsTab settingsTab = new SettingsTab(primaryStage); // Hier wird die primaryStage übergeben

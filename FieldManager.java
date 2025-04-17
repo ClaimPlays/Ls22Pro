@@ -45,47 +45,57 @@ public class FieldManager {
             case "WHEAT":
                 options.add("Raps");
                 options.add("Gerste");
+                options.add("Hafer");
                 break;
             case "BARLEY":
                 options.add("Weizen");
                 options.add("Hafer");
+                options.add("Raps");
                 break;
             case "CANOLA":
                 options.add("Weizen");
                 options.add("Sonnenblumen");
+                options.add("Hafer");
                 break;
             case "CORN":
             case "MAIZE":
                 options.add("Sojabohnen");
                 options.add("Kartoffeln");
+                options.add("Gras");
                 break;
             case "SOYBEAN":
                 options.add("Mais");
                 options.add("Sorghum");
+                options.add("Weizen");
                 break;
             case "SUNFLOWER":
                 options.add("Mais");
                 options.add("Sojabohnen");
+                options.add("Kartoffeln");
                 break;
             case "POTATO":
                 options.add("Weizen");
                 options.add("Zuckerrüben");
+                options.add("Sonnenblumen");
                 break;
-            case "SUGARBEEET":
+            case "SUGARBEET": // Tippfehler korrigiert
                 options.add("Kartoffeln");
                 options.add("Gerste");
                 break;
             case "OAT":
                 options.add("Gerste");
                 options.add("Gras");
+                options.add("Weizen");
                 break;
             case "SORGHUM":
                 options.add("Mais");
                 options.add("Sojabohnen");
+                options.add("Raps");
                 break;
             case "GRASS":
                 options.add("Weizen");
                 options.add("Gerste");
+                options.add("Mais");
                 break;
             case "COTTON":
                 options.add("Sorghum");
@@ -156,6 +166,15 @@ public class FieldManager {
 
         } catch (Exception e) {
             System.out.println("Fehler beim Speichern der gekauften Felder: " + e.getMessage());
+        }
+    }
+
+    public void updateFieldStatus(int fieldId, String newStatus) {
+        for (Field field : fields) {
+            if (field.getId() == fieldId) {
+                field.setStatus(newStatus);
+                break;
+            }
         }
     }
 
