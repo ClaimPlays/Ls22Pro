@@ -96,6 +96,10 @@ public class Main extends Application {
             updateFieldStatusBasedOnMonth(selectedMonth);
         });
 
+        // Label "Aktueller Monat"
+        Label currentMonthLabel = new Label("Aktueller Monat: ");
+        currentMonthLabel.setStyle("-fx-font-weight: bold;"); // Optional: Hervorhebung des Labels
+
         // Layout mit GridPane
         GridPane gridPane = new GridPane();
         gridPane.setHgap(30);
@@ -104,14 +108,18 @@ public class Main extends Application {
         // Buttons und Filter in die obere Zeile des GridPane setzen
         gridPane.add(loadButton, 0, 0);
         gridPane.add(saveButton, 1, 0);
-        gridPane.add(monthComboBox, 2, 0);
-        gridPane.add(filterPurchasedCheckbox, 3, 0);
+        gridPane.add(currentMonthLabel, 2, 0); // Label für aktuellen Monat
+        gridPane.add(monthComboBox, 3, 0);
 
         // ** Abstand nach unten hinzufügen **
         VBox.setMargin(gridPane, new Insets(10, 0, 20, 0)); // Abstand zwischen Buttons und Tabelle
 
         // Tabelle in die nächste Zeile setzen
         gridPane.add(tableView, 0, 1, 4, 1); // Tabelle über die gesamte Breite
+
+        // Filteroption unter die Tabelle setzen
+        GridPane.setMargin(filterPurchasedCheckbox, new Insets(10, 0, 0, 0)); // Abstand zwischen Tabelle und Checkbox
+        gridPane.add(filterPurchasedCheckbox, 0, 2, 4, 1); // Checkbox über die gesamte Breite
 
         // Tab-Inhalt setzen
         VBox fieldManagementLayout = new VBox(10, gridPane);
@@ -206,8 +214,56 @@ public class Main extends Application {
             };
         });
 
+        TableColumn<Field, String> sowingTimeColumn = new TableColumn<>("Saatzeit der Folge Frucht");
+        sowingTimeColumn.setCellValueFactory(cellData -> {
+            String nextFruit = cellData.getValue().getNextFruit();
+            if (nextFruit == null || nextFruit.isEmpty()) {
+                return new SimpleStringProperty("Keine Folge Frucht");
+            }
+
+            // Utilize growthCalendar to fetch the sowing period for the selected next fruit
+            Map<String, String> fruitGrowth = growthCalendar.get(nextFruit);
+            if (fruitGrowth != null) {
+                String sowingPeriod = null;
+                for (Map.Entry<String, String> entry : fruitGrowth.entrySet()) {
+                    if (entry.getValue().equals("Saatzeit")) {
+                        if (sowingPeriod == null) {
+                            sowingPeriod = entry.getKey();
+                        } else {
+                            sowingPeriod += ", " + entry.getKey();
+                        }
+                    }
+                }
+                return new SimpleStringProperty(sowingPeriod != null ? sowingPeriod : "Keine Saatzeit definiert");
+            }
+            return new SimpleStringProperty("Unbekannte Frucht");
+        });
+
+// Set CellFactory to style the column green if it matches the selected month
+        sowingTimeColumn.setCellFactory(column -> new TableCell<Field, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+
+                    // If the sowing period contains the selected month, highlight it in green
+                    if (selectedMonth != null && item.contains(selectedMonth)) {
+                        setStyle("-fx-background-color: lightgreen; -fx-text-fill: black;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
         nextFruitColumn.setPrefWidth(150);
         fruitColumn.setPrefWidth(100);
+        sowingTimeColumn.setPrefWidth(180);
 
         TableColumn<Field, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(cellData -> cellData.getValue().statusProperty());
@@ -249,7 +305,7 @@ public class Main extends Application {
             }
         });
 
-        tableView.getColumns().addAll(idColumn, fruitColumn, purchasedColumn, nextFruitColumn, statusColumn);
+        tableView.getColumns().addAll(idColumn, fruitColumn, purchasedColumn, nextFruitColumn, statusColumn, sowingTimeColumn);
 
         return tableView;
     }
