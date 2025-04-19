@@ -138,14 +138,11 @@ public class Main extends Application {
 
         calendarTab.setContent(calendarView);
 
-        WorkTab workTab = new WorkTab(fieldManager);
-        Tab workTabContent = workTab.createWorkTab();
-
         SettingsTab settingsTab = new SettingsTab(primaryStage); // Hier wird die primaryStage übergeben
         Tab settingsTabContent = settingsTab.createSettingsTab();
 
         // Tabs hinzufügen
-        tabPane.getTabs().addAll(fieldManagementTab, workTabContent, calendarTab, settingsTabContent);
+        tabPane.getTabs().addAll(fieldManagementTab, calendarTab, settingsTabContent);
 
         // Szene erstellen
         BorderPane root = new BorderPane();
@@ -204,11 +201,17 @@ public class Main extends Application {
                         return;
                     }
 
+                    // Expliziter Cast von getTableRow().getItem() zu Field
                     Field field = (Field) getTableRow().getItem();
-                    List<String> nextFruitOptions = fieldManager.getNextFruitOptions(field.getPlannedFruit());
-                    comboBox.setItems(FXCollections.observableArrayList(nextFruitOptions));
+                    comboBox.setItems(FXCollections.observableArrayList(fieldManager.getNextFruitOptions(field.getPlannedFruit())));
                     comboBox.setValue(field.getNextFruit());
-                    comboBox.setOnAction(e -> field.setNextFruit(comboBox.getValue()));
+
+                    // Speichert Änderungen
+                    comboBox.setOnAction(e -> {
+                        field.setNextFruit(comboBox.getValue());
+                        fieldManager.autoSaveFields();
+                    });
+
                     setGraphic(comboBox);
                 }
             };

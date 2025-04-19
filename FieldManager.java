@@ -108,6 +108,39 @@ public class FieldManager {
         return options;
     }
 
+    public void autoSaveFields() {
+        try {
+            String filePath = "fields.xml"; // Pfad zur Datei
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.newDocument();
+
+            Element root = document.createElement("fields");
+            document.appendChild(root);
+
+            for (Field field : fields) {
+                Element fieldElement = document.createElement("field");
+                fieldElement.setAttribute("id", String.valueOf(field.getId()));
+                fieldElement.setAttribute("plannedFruit", field.getPlannedFruit());
+                fieldElement.setAttribute("nextFruit", field.getNextFruit());
+                fieldElement.setAttribute("purchased", String.valueOf(field.isPurchased()));
+                fieldElement.setAttribute("status", field.getStatus());
+                root.appendChild(fieldElement);
+            }
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File(filePath));
+            transformer.transform(source, result);
+
+            System.out.println("Änderungen automatisch gespeichert.");
+        } catch (Exception e) {
+            System.err.println("Fehler beim automatischen Speichern: " + e.getMessage());
+        }
+    }
+
     // Felder aus einer XML-Datei laden
     public void loadFields(String filePath) {
         try {
