@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -28,6 +30,7 @@ public class Main extends Application {
     private Map<String, Map<String, String>> growthCalendar; // Karte für Frucht und Status basierend auf Monat
     private final String CONFIG_FILE = "config.properties"; // Datei zur Speicherung von Pfad und Monat
     private boolean isDarkMode = false; // Zustand des Dunkelmodus
+    private Field selectedField; // Das aktuelle Feld, das in der Tabelle ausgewählt wurde
 
     @Override
     public void start(Stage primaryStage) {
@@ -44,6 +47,17 @@ public class Main extends Application {
         // Tooltip für die Tabelle
         Tooltip tableTooltip = new Tooltip("Zeigt alle Felder mit Frucht, Status und weiteren Informationen an.");
         Tooltip.install(tableView, tableTooltip);
+
+        // Button für Folge Frucht
+        Button selectNextFruitButton = new Button("Folge Frucht auswählen");
+        selectNextFruitButton.setDisable(true); // Standardmäßig deaktiviert
+        selectNextFruitButton.setOnAction(e -> {
+            if (selectedField != null) {
+                FieldManagementPopup.showPopup(selectedField, fieldManager, () -> {
+                    tableView.refresh(); // Tabelle aktualisieren
+                });
+            }
+        });
 
         // Buttons und andere UI-Elemente
         Button loadButton = new Button("Datei laden");
@@ -187,34 +201,29 @@ public class Main extends Application {
         purchasedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(purchasedColumn));
 
         TableColumn<Field, String> nextFruitColumn = new TableColumn<>("Folge Frucht");
-        nextFruitColumn.setCellValueFactory(cellData -> cellData.getValue().nextFruitProperty());
-        nextFruitColumn.setCellFactory(column -> {
-            return new TableCell<Field, String>() {
-                private final ComboBox<String> comboBox = new ComboBox<>();
+        nextFruitColumn.setCellFactory(column -> new TableCell<Field, String>() { // Generische Typen explizit angeben
+            private final Button selectButton = new Button("Auswählen");
 
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                        setGraphic(null);
-                        return;
-                    }
-
-                    // Expliziter Cast von getTableRow().getItem() zu Field
+            {
+                selectButton.setOnAction(e -> {
                     Field field = (Field) getTableRow().getItem();
-                    comboBox.setItems(FXCollections.observableArrayList(fieldManager.getNextFruitOptions(field.getPlannedFruit())));
-                    comboBox.setValue(field.getNextFruit());
+                    if (field != null) {
+                        FieldManagementPopup.showPopup(field, fieldManager, () -> {
+                            tableView.refresh(); // Tabelle aktualisieren
+                        });
+                    }
+                });
+            }
 
-                    // Speichert Änderungen
-                    comboBox.setOnAction(e -> {
-                        field.setNextFruit(comboBox.getValue());
-                        fieldManager.autoSaveFields();
-                    });
-
-                    setGraphic(comboBox);
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(selectButton);
                 }
-            };
+            }
         });
 
         TableColumn<Field, String> sowingTimeColumn = new TableColumn<>("Saatzeit der Folge Frucht");
