@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -30,7 +28,6 @@ public class Main extends Application {
     private Map<String, Map<String, String>> growthCalendar; // Karte für Frucht und Status basierend auf Monat
     private final String CONFIG_FILE = "config.properties"; // Datei zur Speicherung von Pfad und Monat
     private boolean isDarkMode = false; // Zustand des Dunkelmodus
-    private Field selectedField; // Das aktuelle Feld, das in der Tabelle ausgewählt wurde
 
     @Override
     public void start(Stage primaryStage) {
@@ -47,17 +44,6 @@ public class Main extends Application {
         // Tooltip für die Tabelle
         Tooltip tableTooltip = new Tooltip("Zeigt alle Felder mit Frucht, Status und weiteren Informationen an.");
         Tooltip.install(tableView, tableTooltip);
-
-        // Button für Folge Frucht
-        Button selectNextFruitButton = new Button("Folge Frucht auswählen");
-        selectNextFruitButton.setDisable(true); // Standardmäßig deaktiviert
-        selectNextFruitButton.setOnAction(e -> {
-            if (selectedField != null) {
-                FieldManagementPopup.showPopup(selectedField, fieldManager, () -> {
-                    tableView.refresh(); // Tabelle aktualisieren
-                });
-            }
-        });
 
         // Buttons und andere UI-Elemente
         Button loadButton = new Button("Datei laden");
@@ -95,6 +81,17 @@ public class Main extends Application {
                 tableView.setItems(FXCollections.observableArrayList(fieldManager.getFields()));
             }
         });
+
+        // Neuer Button zum Öffnen des Frucht Folge Popups
+        Button selectFruitButton = new Button("Frucht Folge auswählen");
+        selectFruitButton.setTooltip(new Tooltip("Öffnet ein Fenster zur Auswahl einer Frucht Folge."));
+        selectFruitButton.setOnAction(e -> {
+            // Zeige das Popup für die Frucht Folge
+            FieldManagementPopup.showPopup(new Field(-1, "", false, ""), fieldManager, () -> {
+                tableView.refresh(); // Tabelle aktualisieren, wenn nötig
+            });
+        });
+
 
         // Monatsauswahl ComboBox mit Tooltip
         ComboBox<String> monthComboBox = new ComboBox<>();
@@ -163,7 +160,7 @@ public class Main extends Application {
         root.setCenter(tabPane);
 
         Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        String cssPath = FieldManagementPopup.class.getResource("/style.css").toExternalForm();
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -201,7 +198,8 @@ public class Main extends Application {
         purchasedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(purchasedColumn));
 
         TableColumn<Field, String> nextFruitColumn = new TableColumn<>("Folge Frucht");
-        nextFruitColumn.setCellFactory(column -> new TableCell<Field, String>() { // Generische Typen explizit angeben
+        nextFruitColumn.setCellValueFactory(cellData -> cellData.getValue().nextFruitProperty()); // Bindung an nextFruit
+        nextFruitColumn.setCellFactory(column -> new TableCell<Field, String>() {
             private final Button selectButton = new Button("Auswählen");
 
             {
@@ -218,10 +216,11 @@ public class Main extends Application {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) {
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
                     setGraphic(null);
                 } else {
                     setGraphic(selectButton);
+                    setText(item); // Zeige die aktuelle Folge Frucht an
                 }
             }
         });
