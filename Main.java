@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
@@ -15,6 +16,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tab;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -34,6 +36,18 @@ public class Main extends Application {
         primaryStage.setTitle("Feldverwaltung LS22");
 
         TabPane tabPane = new TabPane();
+
+        // Tabelle und Button in ein Layout einfügen
+        Button manageButton = new Button("Folge Frucht auswählen");
+        manageButton.setOnAction(e -> showSelectedFieldPopup());
+
+        BorderPane layout = new BorderPane();
+        layout.setCenter(tableView);
+        layout.setBottom(manageButton);
+
+        Scene scene = new Scene(layout, 800, 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
         // Tab 1: Feldverwaltung
         Tab fieldManagementTab = new Tab("Feldverwaltung");
@@ -369,6 +383,17 @@ public class Main extends Application {
             selectedMonth = properties.getProperty("selectedMonth", "");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showSelectedFieldPopup() {
+        Field selectedField = tableView.getSelectionModel().getSelectedItem();
+
+        if (selectedField != null) {
+            FieldManagementPopup.showPopup(selectedField, fieldManager, () -> tableView.refresh());
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Bitte wählen Sie ein Feld aus!");
+            alert.showAndWait();
         }
     }
 
