@@ -37,14 +37,6 @@ public class Main extends Application {
 
         TabPane tabPane = new TabPane();
 
-        // Tabelle und Button in ein Layout einfügen
-        Button manageButton = new Button("Folge Frucht auswählen");
-        manageButton.setOnAction(e -> showSelectedFieldPopup());
-
-        BorderPane layout = new BorderPane();
-        layout.setCenter(tableView);
-        layout.setBottom(manageButton);
-
         // Tab 1: Feldverwaltung
         Tab fieldManagementTab = new Tab("Feldverwaltung");
         fieldManagementTab.setClosable(false);
