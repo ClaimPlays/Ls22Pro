@@ -45,10 +45,6 @@ public class Main extends Application {
         layout.setCenter(tableView);
         layout.setBottom(manageButton);
 
-        Scene scene = new Scene(layout, 800, 600);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
         // Tab 1: Feldverwaltung
         Tab fieldManagementTab = new Tab("Feldverwaltung");
         fieldManagementTab.setClosable(false);
