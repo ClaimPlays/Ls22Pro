@@ -160,7 +160,7 @@ public class Main extends Application {
         root.setCenter(tabPane);
 
         Scene scene = new Scene(root, 800, 600);
-        String cssPath = FieldManagementPopup.class.getResource("/style.css").toExternalForm();
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -272,7 +272,7 @@ public class Main extends Application {
             }
         });
 
-        nextFruitColumn.setPrefWidth(150);
+        nextFruitColumn.setPrefWidth(180);
         fruitColumn.setPrefWidth(100);
         sowingTimeColumn.setPrefWidth(180);
 
