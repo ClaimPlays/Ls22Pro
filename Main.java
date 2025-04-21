@@ -3,6 +3,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -10,6 +11,8 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.control.ToggleButton;
@@ -40,12 +43,28 @@ public class Main extends Application {
         // Tab 1: Feldverwaltung
         Tab fieldManagementTab = new Tab("Feldverwaltung");
         fieldManagementTab.setClosable(false);
+        ImageView fieldIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/field.png")));
+        fieldIcon.setFitWidth(16); // Icon-Breite
+        fieldIcon.setFitHeight(16); // Icon-Höhe
+        fieldManagementTab.setGraphic(fieldIcon); // Icon zum Tab hinzufügen
 
         tableView = createFieldTableView();
 
         // Tooltip für die Tabelle
         Tooltip tableTooltip = new Tooltip("Zeigt alle Felder mit Frucht, Status und weiteren Informationen an.");
         Tooltip.install(tableView, tableTooltip);
+
+        Button assignFruitButton = new Button("Folge Frucht zuweisen");
+        assignFruitButton.setTooltip(new Tooltip("Weise eine Folge Frucht für das ausgewählte Feld zu."));
+        assignFruitButton.setOnAction(e -> {
+            Field selectedField = tableView.getSelectionModel().getSelectedItem();
+            if (selectedField != null) {
+                FieldManagementPopup.showPopup(selectedField, fieldManager, () -> tableView.refresh());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Bitte wählen Sie ein Feld aus!");
+                alert.showAndWait();
+            }
+        });
 
         // Buttons und andere UI-Elemente
         Button loadButton = new Button("Datei laden");
@@ -72,6 +91,7 @@ public class Main extends Application {
         });
 
         CheckBox filterPurchasedCheckbox = new CheckBox("Nur gekaufte Felder anzeigen");
+        filterPurchasedCheckbox.setStyle("-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 14px;");
         filterPurchasedCheckbox.setTooltip(new Tooltip("Filtern Sie die Tabelle, um nur gekaufte Felder anzuzeigen."));
         filterPurchasedCheckbox.setOnAction(e -> {
             if (filterPurchasedCheckbox.isSelected()) {
@@ -84,14 +104,20 @@ public class Main extends Application {
             }
         });
 
-        // Neuer Button zum Öffnen des Frucht Folge Popups
-        Button selectFruitButton = new Button("Frucht Folge auswählen");
-        selectFruitButton.setTooltip(new Tooltip("Öffnet ein Fenster zur Auswahl einer Frucht Folge."));
-        selectFruitButton.setOnAction(e -> {
-            // Zeige das Popup für die Frucht Folge
-            FieldManagementPopup.showPopup(new Field(-1, "", false, ""), fieldManager, () -> {
-                tableView.refresh(); // Tabelle aktualisieren, wenn nötig
-            });
+        // Neuer Button zum Auswählen der Folge Frucht für das ausgewählte Feld
+        Button selectFruitForSelectedFieldButton = new Button("Folge Frucht");
+        selectFruitForSelectedFieldButton.setTooltip(new Tooltip("Öffnet ein Fenster zur Auswahl einer Folge Frucht für das ausgewählte Feld."));
+        selectFruitForSelectedFieldButton.setOnAction(e -> {
+            // Hol das ausgewählte Feld
+            Field selectedField = tableView.getSelectionModel().getSelectedItem();
+            if (selectedField != null) {
+                // Zeige das Popup für das ausgewählte Feld
+                FieldManagementPopup.showPopup(selectedField, fieldManager, () -> tableView.refresh());
+            } else {
+                // Warnmeldung anzeigen, wenn kein Feld ausgewählt ist
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Bitte wählen Sie ein Feld aus!");
+                alert.showAndWait();
+            }
         });
 
 
@@ -111,21 +137,35 @@ public class Main extends Application {
 
         // Label "Aktueller Monat"
         Label currentMonthLabel = new Label("Aktueller Monat: ");
-        currentMonthLabel.setStyle("-fx-font-weight: bold;"); // Optional: Hervorhebung des Labels
+        currentMonthLabel.setStyle("-fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 14px;"); // Optional: Hervorhebung des Labels
+
+        // Label "Aktueller Monat" und Dropdown in eine HBox packen
+        HBox monthSelectionBox = new HBox(0); // Abstand von 5px zwischen Label und Dropdown
+        monthSelectionBox.getChildren().addAll(currentMonthLabel, monthComboBox);
+        monthSelectionBox.setAlignment(Pos.CENTER_LEFT); // Ausrichtung der Elemente nach links
 
         // Layout mit GridPane
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(30);
+        gridPane.setHgap(10);
         gridPane.setVgap(10);
+
+        // Layout für die Elemente
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(10));
+        layout.getChildren().addAll(monthSelectionBox, filterPurchasedCheckbox);
+        layout.setStyle("-fx-background-color: rgba(80, 124, 123, 1);"); // Semi-transparenter Hintergrund
 
         // Buttons und Filter in die obere Zeile des GridPane setzen
         gridPane.add(loadButton, 0, 0);
-        gridPane.add(saveButton, 1, 0);
-        gridPane.add(currentMonthLabel, 2, 0); // Label für aktuellen Monat
-        gridPane.add(monthComboBox, 3, 0);
+        gridPane.add(selectFruitForSelectedFieldButton, 1, 0); // Neuer Button für das ausgewählte Feld
+        gridPane.add(saveButton, 2, 0);
+        gridPane.add(monthSelectionBox, 3, 0); // HBox mit Label und Dropdown direkt positioniert
 
         // ** Abstand nach unten hinzufügen **
         VBox.setMargin(gridPane, new Insets(10, 0, 20, 0)); // Abstand zwischen Buttons und Tabelle
+
+        // Füge diesen Button zum Layout hinzu, z.B. unterhalb der Tabelle
+        VBox.setMargin(assignFruitButton, new Insets(10, 0, 0, 0)); // Optional:
 
         // Tabelle in die nächste Zeile setzen
         gridPane.add(tableView, 0, 1, 4, 1); // Tabelle über die gesamte Breite
@@ -141,6 +181,10 @@ public class Main extends Application {
         // Tab 2: Kalender
         Tab calendarTab = new Tab("Kalender");
         calendarTab.setClosable(false);
+        ImageView calendarIcon = new ImageView(new Image(getClass().getResourceAsStream("/images/calendar.png")));
+        calendarIcon.setFitWidth(16); // Icon-Breite
+        calendarIcon.setFitHeight(16); // Icon-Höhe
+        calendarTab.setGraphic(calendarIcon); // Icon zum Tab hinzufügen
 
         GrowthCalendar growthCalendarView = new GrowthCalendar();
         VBox calendarView = growthCalendarView.getCalendarView();
@@ -156,6 +200,19 @@ public class Main extends Application {
 
         // Tabs hinzufügen
         tabPane.getTabs().addAll(fieldManagementTab, calendarTab, settingsTabContent);
+
+        // Hintergrundbild festlegen
+        Image backgroundImage = new Image(getClass().getResourceAsStream("/images/background.jpg")); // Bild aus dem Ordner "images"
+        BackgroundImage background = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT, // Wiederholung horizontal
+                BackgroundRepeat.NO_REPEAT, // Wiederholung vertikal
+                BackgroundPosition.DEFAULT, // Standardposition
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, true) // Größe anpassen
+        );
+
+        // Hintergrund dem TabPane hinzufügen
+        tabPane.setBackground(new Background(background));
 
         // Szene erstellen
         BorderPane root = new BorderPane();
@@ -201,28 +258,18 @@ public class Main extends Application {
 
         TableColumn<Field, String> nextFruitColumn = new TableColumn<>("Folge Frucht");
         nextFruitColumn.setCellValueFactory(cellData -> cellData.getValue().nextFruitProperty()); // Bindung an nextFruit
+
+        // Kein Button mehr, nur Text wird in der Spalte angezeigt
         nextFruitColumn.setCellFactory(column -> new TableCell<Field, String>() {
-            private final Button selectButton = new Button("Auswählen");
-
-            {
-                selectButton.setOnAction(e -> {
-                    Field field = (Field) getTableRow().getItem();
-                    if (field != null) {
-                        FieldManagementPopup.showPopup(field, fieldManager, () -> {
-                            tableView.refresh(); // Tabelle aktualisieren
-                        });
-                    }
-                });
-            }
-
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                if (empty || item == null) {
+                    setText(null);
                     setGraphic(null);
                 } else {
-                    setGraphic(selectButton);
                     setText(item); // Zeige die aktuelle Folge Frucht an
+                    setGraphic(null); // Entferne jegliche grafische Komponenten
                 }
             }
         });
@@ -274,7 +321,7 @@ public class Main extends Application {
             }
         });
 
-        nextFruitColumn.setPrefWidth(180);
+        nextFruitColumn.setPrefWidth(110);
         fruitColumn.setPrefWidth(100);
         sowingTimeColumn.setPrefWidth(180);
 
