@@ -218,7 +218,7 @@ public class Main extends Application {
         BorderPane root = new BorderPane();
         root.setCenter(tabPane);
 
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 920, 610);
         scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -380,14 +380,16 @@ public class Main extends Application {
         }
 
         for (Field field : tableView.getItems()) {
-            String fruit = fieldManager.translateFruit(field.getPlannedFruit());
+            String fruitToCheck = field.getNextFruit() != null && !field.getNextFruit().isEmpty()
+                    ? field.getNextFruit() // Verwende die Folgefrucht, falls vorhanden
+                    : fieldManager.translateFruit(field.getPlannedFruit()); // Andernfalls die geplante Frucht
 
-            Map<String, String> fruitGrowth = growthCalendar.getOrDefault(fruit, null);
+            Map<String, String> fruitGrowth = growthCalendar.getOrDefault(fruitToCheck, null);
             if (fruitGrowth != null) {
-                String status = fruitGrowth.getOrDefault(selectedMonth, "Offen");
+                String status = fruitGrowth.getOrDefault(selectedMonth, "--");
                 field.setStatus(status);
             } else {
-                field.setStatus("Offen");
+                field.setStatus("--");
             }
         }
 

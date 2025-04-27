@@ -6,149 +6,134 @@ public class GrowthCalendarInitializer {
     public static Map<String, Map<String, String>> initializeGrowthCalendar() {
         Map<String, Map<String, String>> growthCalendar = new HashMap<>();
 
-        // Wachstumsdaten für Weizen
+        // Daten für Weizen
         Map<String, String> wheatGrowth = new HashMap<>();
-        wheatGrowth.put("Januar", "Geerntet");
-        wheatGrowth.put("Februar", "Geerntet");
         wheatGrowth.put("März", "Saatzeit");
-        wheatGrowth.put("April", "Saatzeit");
-        wheatGrowth.put("Mai", "Wachstum");
-        wheatGrowth.put("Juni", "Wachstum");
+        wheatGrowth.put("September", "Saatzeit");
+        wheatGrowth.put("Oktober", "Saatzeit");
+        wheatGrowth.put("November", "Saatzeit");
         wheatGrowth.put("Juli", "Erntezeit");
         wheatGrowth.put("August", "Erntezeit");
-        wheatGrowth.put("September", "Geerntet");
-        wheatGrowth.put("Oktober", "Geerntet");
-        wheatGrowth.put("November", "Geerntet");
-        wheatGrowth.put("Dezember", "Geerntet");
         growthCalendar.put("Weizen", wheatGrowth);
 
-        // Wachstumsdaten für Gerste
+        // Daten für Gerste
         Map<String, String> barleyGrowth = new HashMap<>();
-        barleyGrowth.put("Januar", "Geerntet");
-        barleyGrowth.put("Februar", "Geerntet");
         barleyGrowth.put("März", "Saatzeit");
-        barleyGrowth.put("April", "Saatzeit");
-        barleyGrowth.put("Mai", "Wachstum");
-        barleyGrowth.put("Juni", "Wachstum");
+        wheatGrowth.put("September", "Saatzeit");
+        barleyGrowth.put("Juni", "Erntezeit");
         barleyGrowth.put("Juli", "Erntezeit");
         barleyGrowth.put("August", "Erntezeit");
-        barleyGrowth.put("September", "Geerntet");
-        barleyGrowth.put("Oktober", "Geerntet");
-        barleyGrowth.put("November", "Geerntet");
-        barleyGrowth.put("Dezember", "Geerntet");
         growthCalendar.put("Gerste", barleyGrowth);
 
-        // Wachstumsdaten für Raps
+        // Daten für Raps
         Map<String, String> canolaGrowth = new HashMap<>();
-        canolaGrowth.put("Januar", "Geerntet");
-        canolaGrowth.put("Februar", "Geerntet");
-        canolaGrowth.put("März", "Geerntet");
-        canolaGrowth.put("April", "Geerntet");
-        canolaGrowth.put("Mai", "Wachstum");
-        canolaGrowth.put("Juni", "Geerntet");
-        canolaGrowth.put("Juli", "Erntezeit");
         canolaGrowth.put("August", "Saatzeit");
-        canolaGrowth.put("September", "Saatzeit");
-        canolaGrowth.put("Oktober", "Wachstum");
-        canolaGrowth.put("November", "Wachstum");
-        canolaGrowth.put("Dezember", "Geerntet");
+        canolaGrowth.put("Juli", "Erntezeit");
         growthCalendar.put("Raps", canolaGrowth);
 
-        // Wachstumsdaten für Hafer
+        // Daten für Hafer
         Map<String, String> oatGrowth = new HashMap<>();
-        oatGrowth.put("Januar", "Geerntet");
-        oatGrowth.put("Februar", "Geerntet");
         oatGrowth.put("März", "Saatzeit");
         oatGrowth.put("April", "Saatzeit");
-        oatGrowth.put("Mai", "Wachstum");
-        oatGrowth.put("Juni", "Wachstum");
-        oatGrowth.put("Juli", "Erntezeit");
+        oatGrowth.put("Sptember", "Erntezeit");
         oatGrowth.put("August", "Erntezeit");
-        oatGrowth.put("September", "Geerntet");
-        oatGrowth.put("Oktober", "Geerntet");
-        oatGrowth.put("November", "Geerntet");
-        oatGrowth.put("Dezember", "Geerntet");
         growthCalendar.put("Hafer", oatGrowth);
 
-        // Wachstumsdaten für Mais
+        // Daten für Mais
         Map<String, String> cornGrowth = new HashMap<>();
-        cornGrowth.put("Januar", "Geerntet");
-        cornGrowth.put("Februar", "Geerntet");
-        cornGrowth.put("März", "Geerntet");
         cornGrowth.put("April", "Saatzeit");
         cornGrowth.put("Mai", "Saatzeit");
-        cornGrowth.put("Juni", "Wachstum");
-        cornGrowth.put("Juli", "Wachstum");
-        cornGrowth.put("August", "Wachstum");
-        cornGrowth.put("September", "Wachstum");
         cornGrowth.put("Oktober", "Erntezeit");
-        cornGrowth.put("November", "Erntezeit");
-        cornGrowth.put("Dezember", "Geerntet");
+        cornGrowth.put("Sptember", "Erntezeit");
         growthCalendar.put("Mais", cornGrowth);
 
-        // Wachstumsdaten für Sonnenblumen
+        // Daten für Sonnenblumen
         Map<String, String> sunflowerGrowth = new HashMap<>();
-        sunflowerGrowth.put("Januar", "Geerntet");
-        sunflowerGrowth.put("Februar", "Geerntet");
-        sunflowerGrowth.put("März", "Geerntet");
         sunflowerGrowth.put("April", "Saatzeit");
-        sunflowerGrowth.put("Mai", "Saatzeit");
-        sunflowerGrowth.put("Juni", "Wachstum");
-        sunflowerGrowth.put("Juli", "Wachstum");
-        sunflowerGrowth.put("August", "Wachstum");
-        sunflowerGrowth.put("September", "Wachstum");
+        sunflowerGrowth.put("November", "Saatzeit");
         sunflowerGrowth.put("Oktober", "Erntezeit");
-        sunflowerGrowth.put("November", "Erntezeit");
-        sunflowerGrowth.put("Dezember", "Geerntet");
         growthCalendar.put("Sonnenblumen", sunflowerGrowth);
 
-        // Wachstumsdaten für Sojabohnen
+        // Daten für Sojabohnen
         Map<String, String> soybeanGrowth = new HashMap<>();
-        soybeanGrowth.put("Januar", "Geerntet");
-        soybeanGrowth.put("Februar", "Geerntet");
-        soybeanGrowth.put("März", "Geerntet");
         soybeanGrowth.put("April", "Saatzeit");
         soybeanGrowth.put("Mai", "Saatzeit");
-        soybeanGrowth.put("Juni", "Wachstum");
-        soybeanGrowth.put("Juli", "Wachstum");
-        soybeanGrowth.put("August", "Wachstum");
-        soybeanGrowth.put("September", "Wachstum");
         soybeanGrowth.put("Oktober", "Erntezeit");
-        soybeanGrowth.put("November", "Erntezeit");
-        soybeanGrowth.put("Dezember", "Geerntet");
+        soybeanGrowth.put("September", "Erntezeit");
         growthCalendar.put("Sojabohnen", soybeanGrowth);
 
-        // Wachstumsdaten für Kartoffeln
+        // Daten für Kartoffeln
         Map<String, String> potatoGrowth = new HashMap<>();
-        potatoGrowth.put("Januar", "Geerntet");
-        potatoGrowth.put("Februar", "Geerntet");
-        potatoGrowth.put("März", "Saatzeit");
+        potatoGrowth.put("Mai", "Saatzeit");
         potatoGrowth.put("April", "Saatzeit");
-        potatoGrowth.put("Mai", "Wachstum");
-        potatoGrowth.put("Juni", "Erntezeit");
-        potatoGrowth.put("Juli", "Erntezeit");
-        potatoGrowth.put("August", "Geerntet");
-        potatoGrowth.put("September", "Geerntet");
-        potatoGrowth.put("Oktober", "Geerntet");
-        potatoGrowth.put("November", "Geerntet");
-        potatoGrowth.put("Dezember", "Geerntet");
+        potatoGrowth.put("Sptember", "Erntezeit");
+        potatoGrowth.put("Oktober", "Erntezeit");
+        potatoGrowth.put("November", "Erntezeit");
         growthCalendar.put("Kartoffeln", potatoGrowth);
 
-        // Wachstumsdaten für Gras
+        // Daten für Zuckerrüben
+        Map<String, String> sugarbeetGrowth = new HashMap<>();
+        sugarbeetGrowth.put("März", "Saatzeit");
+        sugarbeetGrowth.put("April", "Saatzeit");
+        sugarbeetGrowth.put("Sebtember", "Erntezeit");
+        sugarbeetGrowth.put("Oktober", "Erntezeit");
+        sugarbeetGrowth.put("November", "Erntezeit");
+        sugarbeetGrowth.put("Dezember", "Erntezeit");
+        growthCalendar.put("Zuckerrüben", sugarbeetGrowth);
+
+        // Daten für Zuckerrohr
+        Map<String, String> sugarcaneGrowth = new HashMap<>();
+        sugarcaneGrowth.put("März", "Saatzeit");
+        sugarcaneGrowth.put("April", "Saatzeit");
+        sugarcaneGrowth.put("Oktober", "Erntezeit");
+        growthCalendar.put("Zuckerrohr", sugarcaneGrowth);
+
+        // Daten für Baumwolle
+        Map<String, String> cottonGrowth = new HashMap<>();
+        cottonGrowth.put("April", "Saatzeit");
+        cottonGrowth.put("Mai", "Saatzeit");
+        cottonGrowth.put("Oktober", "Erntezeit");
+        growthCalendar.put("Baumwolle", cottonGrowth);
+
+        // Daten für Sorghumhirse
+        Map<String, String> sorghumGrowth = new HashMap<>();
+        sorghumGrowth.put("April", "Saatzeit");
+        sorghumGrowth.put("Mai", "Saatzeit");
+        sorghumGrowth.put("August", "Erntezeit");
+        sorghumGrowth.put("September", "Erntezeit");
+        growthCalendar.put("Sorghumhirse", sorghumGrowth);
+
+        // Daten für Trauben
+        Map<String, String> grapeGrowth = new HashMap<>();
+        grapeGrowth.put("März", "Saatzeit");
+        grapeGrowth.put("Mai", "Saatzeit");
+        grapeGrowth.put("September", "Erntezeit");
+        growthCalendar.put("Trauben", grapeGrowth);
+
+        // Daten für Oliven
+        Map<String, String> oliveGrowth = new HashMap<>();
+        oliveGrowth.put("März", "Saatzeit");
+        oliveGrowth.put("Mai", "Saatzeit");
+        oliveGrowth.put("Oktober", "Erntezeit");
+        growthCalendar.put("Oliven", oliveGrowth);
+
+        // Daten für Pappel
+        Map<String, String> poplarGrowth = new HashMap<>();
+        poplarGrowth.put("Januar", "Saatzeit");
+        poplarGrowth.put("Dezember", "Erntezeit");
+        growthCalendar.put("Pappel", poplarGrowth);
+
+        // Daten für Gras
         Map<String, String> grassGrowth = new HashMap<>();
-        grassGrowth.put("Januar", "Wachstum");
-        grassGrowth.put("Februar", "Wachstum");
-        grassGrowth.put("März", "Wachstum");
-        grassGrowth.put("April", "Wachstum");
-        grassGrowth.put("Mai", "Wachstum");
-        grassGrowth.put("Juni", "Wachstum");
-        grassGrowth.put("Juli", "Wachstum");
-        grassGrowth.put("August", "Wachstum");
-        grassGrowth.put("September", "Wachstum");
-        grassGrowth.put("Oktober", "Wachstum");
-        grassGrowth.put("November", "Wachstum");
-        grassGrowth.put("Dezember", "Wachstum");
+        grassGrowth.put("Januar", "Saatzeit");
+        grassGrowth.put("Dezember", "Erntezeit");
         growthCalendar.put("Gras", grassGrowth);
+
+        // Daten für Ölrettich
+        Map<String, String> oilseedRadishGrowth = new HashMap<>();
+        oilseedRadishGrowth.put("März", "Saatzeit");
+        oilseedRadishGrowth.put("Oktober", "Erntezeit");
+        growthCalendar.put("Ölrettich", oilseedRadishGrowth);
 
         return growthCalendar;
     }
